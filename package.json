@@ -1,6 +1,7 @@
 {
   "name": "users-crud",
   "version": "0.0.0",
+  "homepage": "https://akshaykumar-m-s.github.io/user-app-angular/auth/login",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

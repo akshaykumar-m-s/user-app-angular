@@ -1,0 +1,21 @@
+<div mat-dialog-title class="text-base">User Details</div>
+<div mat-dialog-content class="flex flex-col justify-center">
+    <mat-form-field>
+        <input matInput [(ngModel)]="data.first_name" placeholder="First Name" required>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput [(ngModel)]="data.last_name" placeholder="Last Name" required>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput [(ngModel)]="data.email" placeholder="Email" required>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions class="flex flex-row justify-center">
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <ng-container *ngIf="!this.data.id; else elseTemplate">
+        <button mat-button color="primary" (click)="createUser(data)" cdkFocusInitial>Create</button>
+    </ng-container>
+    <ng-template #elseTemplate>
+        <button mat-button color="warn" (click)="updateUser(data)" cdkFocusInitial>Update</button>
+    </ng-template>
+</div>

@@ -1,0 +1,6 @@
+<mat-toolbar *ngIf="(isLoggedIn | async)" class="flex flex-auto justify-end">
+    <button mat-button matTooltip="Logout" color="warn" (click)="authService.logout()">
+        Logout <mat-icon>exit_to_app</mat-icon>
+    </button>
+</mat-toolbar>
+<router-outlet></router-outlet>

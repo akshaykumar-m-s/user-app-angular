@@ -1,0 +1,26 @@
+<div class="p-10">
+    <button mat-button matTooltip="Back to List" color="primary" [routerLink]="['/user/list']">
+        Back to List <mat-icon>arrow_back</mat-icon>
+    </button>
+    <ng-container *ngIf="userInfo; else elseTemplate">
+        <mat-card class="grid grid-cols-2 gap-4">
+            <img [src]="userInfo.avatar" width="200" height="200" alt="user-image">
+            <div class="flex flex-col justify-center">
+                <span class="text-xl font-semibold float-left">
+                    {{ userInfo.first_name }} {{ userInfo.last_name }}
+                </span>
+                <span>
+                    {{ userInfo.email }}
+                </span>
+            </div>
+        </mat-card>
+    </ng-container>
+
+    <ng-template #elseTemplate>
+        <mat-card>
+            <span class="text-xl font-semibold float-left">
+                No User Found
+            </span>
+        </mat-card>
+    </ng-template>
+</div>

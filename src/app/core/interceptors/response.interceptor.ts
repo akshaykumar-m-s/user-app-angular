@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import {
   HttpEvent,
   HttpInterceptor,
@@ -6,11 +6,11 @@ import {
   HttpRequest,
   HttpResponse,
   HttpErrorResponse,
-} from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { throwError as observableThrowError } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
-import { Router } from '@angular/router';
+} from "@angular/common/http";
+import { Observable } from "rxjs";
+import { throwError as observableThrowError } from "rxjs";
+import { tap, catchError } from "rxjs/operators";
+import { Router } from "@angular/router";
 
 @Injectable()
 export class ResponseInterceptor implements HttpInterceptor {
@@ -51,7 +51,7 @@ export class ResponseInterceptor implements HttpInterceptor {
           }
           if (error instanceof HttpErrorResponse && error.status === 404) {
             console.error(error);
-            this.router.navigateByUrl('/auth/login');
+            this.router.navigateByUrl("/auth/login");
 
             return observableThrowError(error);
           }
@@ -63,7 +63,7 @@ export class ResponseInterceptor implements HttpInterceptor {
           if (
             error instanceof HttpErrorResponse &&
             error.message ===
-              'Http failure response for (unknown url): 0 Unknown Error'
+              "Http failure response for (unknown url): 0 Unknown Error"
           ) {
             if (error.status === 0) {
               sessionStorage.clear();

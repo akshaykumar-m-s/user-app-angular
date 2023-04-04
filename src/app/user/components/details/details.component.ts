@@ -2,13 +2,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy,
   OnInit,
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from "../../services/user.service";
-import { User } from "../../interfaces/user.interface";
-import { Subscription } from "rxjs";
+import { User } from "../../classes/user.class";
 
 @Component({
   selector: "app-details",
@@ -16,9 +14,8 @@ import { Subscription } from "rxjs";
   styleUrls: ["./details.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DetailsComponent implements OnInit, OnDestroy {
+export class DetailsComponent implements OnInit {
   userInfo!: User;
-  private subscriptions = new Subscription();
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -29,16 +26,10 @@ export class DetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const id = Number(this._activatedRoute.snapshot.paramMap.get("id"));
 
-    this.subscriptions.add(
-      this._userService.getUserById(id).subscribe(async (res) => {
-        const response = await res;
-        this.userInfo = response.data;
-        this.cdRef.detectChanges();
-      })
-    );
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+    this._userService.getUserById(id).subscribe((res) => {
+      const response = res;
+      this.userInfo = response.data;
+      this.cdRef.detectChanges();
+    });
   }
 }

@@ -1,5 +1,4 @@
 export const environment = {
   production: true,
-  ip: 'https://reqres.in/',
-  port: '123',
+  ip: "https://reqres.in/",
 };

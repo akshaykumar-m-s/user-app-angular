@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { Subscription } from "rxjs";
+import { Router } from "@angular/router";
 import { AuthService } from "src/app/core/auth/auth.service";
 
 @Component({
@@ -8,17 +8,24 @@ import { AuthService } from "src/app/core/auth/auth.service";
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
 })
-export class LoginComponent implements OnInit, OnDestroy {
-  errorFlag = false;
+export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
-  private subscriptions = new Subscription();
 
-  constructor(private _authService: AuthService) {}
+  constructor(private _authService: AuthService, private _router: Router) {
+    if (!!localStorage.getItem("token")) {
+      this._router.navigate(["/user/list"]);
+    }
+  }
 
   ngOnInit() {
     this.loginForm = new FormGroup({
       username: new FormControl("", [Validators.required]),
       password: new FormControl("", [Validators.required]),
+    });
+
+    this.loginForm.patchValue({
+      username: "eve.holt@reqres.in",
+      password: "cityslicka",
     });
   }
 
@@ -26,11 +33,5 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.loginForm.valid) {
       this._authService.login(this.loginForm.value);
     }
-
-    console.log(this.loginForm.value);
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.unsubscribe();
   }
 }

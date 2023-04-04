@@ -1,23 +1,28 @@
-import { Component, ViewChild, AfterViewInit, OnDestroy } from "@angular/core";
+import {
+  Component,
+  ViewChild,
+  AfterViewInit,
+  OnDestroy,
+  ViewEncapsulation,
+} from "@angular/core";
 import { UserService } from "../../services/user.service";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
-import { User } from "../../interfaces/user.interface";
+import { User } from "../../classes/user.class";
 import { MatDialog } from "@angular/material/dialog";
 import { EditDialogComponent } from "../edit-dialog/edit-dialog.component";
-import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-users-list",
   templateUrl: "./users-list.component.html",
   styleUrls: ["./users-list.component.scss"],
+  encapsulation: ViewEncapsulation.Emulated,
 })
-export class UsersListComponent implements AfterViewInit, OnDestroy {
+export class UsersListComponent implements AfterViewInit {
   displayedColumns: string[] = ["ID", "Name", "Email", "Action"];
   dataSource!: MatTableDataSource<User>;
   user: any;
-  private subscriptions = new Subscription();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -25,10 +30,14 @@ export class UsersListComponent implements AfterViewInit, OnDestroy {
   constructor(private _userService: UserService, public dialog: MatDialog) {}
 
   ngAfterViewInit() {
+    this.getUserList();
+  }
+
+  private getUserList() {
     this._userService
       .getUserList(this.paginator.pageIndex + 1)
-      .subscribe(async (res) => {
-        const response = await res;
+      .subscribe((res) => {
+        const response = res;
         this.dataSource = new MatTableDataSource(response.data);
 
         this.dataSource.paginator = this.paginator;
@@ -50,33 +59,32 @@ export class UsersListComponent implements AfterViewInit, OnDestroy {
       width: "300px",
     });
 
-    this.subscriptions.add(dialogRef.afterClosed().subscribe((result) => {}));
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.getUserList();
+      }
+    });
   }
 
   edit(item: User) {
-    console.log("el", item);
     const dialogRef = this.dialog.open(EditDialogComponent, {
       width: "300px",
       data: item,
     });
 
-    this.subscriptions.add(
-      dialogRef.afterClosed().subscribe((result) => {
-        this.user = item;
-      })
-    );
+    dialogRef.afterClosed().subscribe((result) => {
+      this.user = item;
+      if (result) {
+        this.getUserList();
+      }
+    });
   }
 
   delete(id: number) {
-    this.subscriptions.add(
-      this._userService.deleteUser(id).subscribe(async (res) => {
-        const response = await res;
-        console.log("Deleted", response);
-      })
-    );
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+    this._userService.deleteUser(id).subscribe((result) => {
+      if (result) {
+        this.getUserList();
+      }
+    });
   }
 }

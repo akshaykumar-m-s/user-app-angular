@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   // ip: 'http://localhost', // local
-  ip: 'https://reqres.in/', // reqres
+  ip: "https://reqres.in/", // reqres
 };
 
 /*
